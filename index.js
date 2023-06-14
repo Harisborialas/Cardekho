@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { router as categoryRoutes } from './routes/categories.js';
 import { router as Cars } from './routes/carsRoute.js';
-
+import nodemailer from 'nodemailer';
 
 const app = express();
 app.use(express.json());
@@ -80,12 +80,39 @@ app.post("/register", (req, res) => {
         if (err) {
           res.send(err);
         } else {
+          sendWelcomeEmail(email, password); // Send welcome email
           res.send({ message: "Successfully registered, please login now." });
         }
       });
     }
   });
 });
+
+// welcoming email
+const sendWelcomeEmail = (email, password) => {
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail', // e.g., 'Gmail'
+    auth: {
+      user: "azan6743@gmail.com",
+      pass: "axesuldopjymmems",
+    },
+  });
+
+  const mailOptions = {
+    from: 'azan6743@gmail.com',
+    to: email,
+    subject: 'Welcome to Cardekho Management System',
+    text: `Dear User,\n\nThank you for registering with our system. Here is your randomly generated password for future logins: ${password}\n\nPlease keep it safe and secure.\n\nBest regards,\nThe Car Inventory Management System Team`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+};
 
 // Check if the user is logged in
 app.get("/user", (req, res) => {

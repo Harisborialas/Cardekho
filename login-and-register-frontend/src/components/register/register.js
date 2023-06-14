@@ -25,12 +25,27 @@ const Register = () => {
     const { name, email, password, reEnterPassword } = user;
     if (name && email && password && password === reEnterPassword) {
       axios.post("http://localhost:3001/register", user).then((res) => {
-        alert(res.data.message);
-        history.push("/login");
+        if (res.data.success) {
+          sendWelcomeEmail(email, res.data.password);
+          alert(res.data.message);
+          history.push("/login");
+        } else {
+          alert(res.data.message);
+        }
       });
     } else {
-      alert("invlid input");
+      alert("Invalid input");
     }
+  };
+
+  const sendWelcomeEmail = (email, password) => {
+    axios.post("http://localhost:3001/sendWelcomeEmail", { email, password })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -43,25 +58,29 @@ const Register = () => {
           name="name"
           value={user.name}
           placeholder="Your Name"
-          onChange={handleChange}></input>
+          onChange={handleChange}
+        ></input>
         <input
           type="text"
           name="email"
           value={user.email}
           placeholder="Your Email"
-          onChange={handleChange}></input>
+          onChange={handleChange}
+        ></input>
         <input
           type="password"
           name="password"
           value={user.password}
           placeholder="Your Password"
-          onChange={handleChange}></input>
+          onChange={handleChange}
+        ></input>
         <input
           type="password"
           name="reEnterPassword"
           value={user.reEnterPassword}
           placeholder="Re-enter Password"
-          onChange={handleChange}></input>
+          onChange={handleChange}
+        ></input>
         <div className="button" onClick={register}>
           Register
         </div>

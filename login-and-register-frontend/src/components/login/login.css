@@ -1,11 +1,5 @@
 
-.app{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-}
+
 .login {
     width: 400px;
     background: #fff;

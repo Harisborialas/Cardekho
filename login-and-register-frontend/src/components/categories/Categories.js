@@ -125,7 +125,7 @@ const CategoryList = () => {
                         pathname: "/spareparts",
                         state: { categoryName: category.name },
                       }} class="mt-3 text-yellow-500 inline-flex items-center">
-                      Learn More
+                      Cars
                       <svg
                         fill="none"
                         stroke="currentColor"
