@@ -1,11 +1,27 @@
 import express from "express";
+import session from "express-session";
 import cors from "cors";
 import mongoose from "mongoose";
+import { router as categoryRoutes } from './routes/categories.js';
+import { router as Cars } from './routes/carsRoute.js';
+
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
+// Configure session middleware
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // Set the session cookie expiration time (1 day)
+    },
+  })
+);
 
 mongoose.connect(
   "mongodb://127.0.0.1:27017/myLoginRegisterDB",
@@ -28,16 +44,17 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-const User = new mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
-//Routes
+// Routes
 app.post("/login", (req, res) => {
-  const { email } = req.body;
-  const { password } = req.body;
+  const { email, password } = req.body;
   User.findOne({ email: email }, (err, user) => {
     if (user) {
       if (password === user.password) {
-        res.send({ message: "Login Successfull", user: user });
+        // Store user information in the session
+        req.session.user = user;
+        res.send({ message: "Login Successful", user: user });
       } else {
         res.send({ message: "Password didn't match" });
       }
@@ -48,30 +65,40 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  const { name } = req.body;
-  const { email } = req.body;
-  const { password } = req.body;
+  const { name, email, password } = req.body;
 
   User.findOne({ email: email }, (err, user) => {
     if (user) {
-      res.send({ message: "User already registerd" });
+      res.send({ message: "User already registered" });
     } else {
-      const user = new User({
+      const newUser = new User({
         name,
         email,
         password,
       });
-      user.save((err) => {
+      newUser.save((err) => {
         if (err) {
           res.send(err);
         } else {
-          res.send({ message: "Successfully Registered, Please login now." });
+          res.send({ message: "Successfully registered, please login now." });
         }
       });
     }
   });
 });
 
-app.listen(9002, () => {
-  console.log(`BE started at port 9002`);
+// Check if the user is logged in
+app.get("/user", (req, res) => {
+  if (req.session.user) {
+    res.send({ user: req.session.user });
+  } else {
+    res.send({ message: "User not logged in" });
+  }
+});
+
+app.use("/api/categories", categoryRoutes);
+app.use("/api/cars", Cars);
+
+app.listen(3001, () => {
+  console.log(`BE started at port 3001`);
 });

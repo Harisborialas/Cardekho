@@ -1,0 +1,25 @@
+{
+    "categories": [
+      {
+        "id": 1,
+        "name": "Bus",
+        "description": "This category includes large vehicles designed for carrying passengers. Buses are commonly used for public transportation, group travel, and other mass transit purposes."
+      },
+      {
+        "id": 2,
+        "name": "Sedan",
+        "description": "Sedans are a type of passenger car with separate compartments for engine, passenger, and cargo space. They typically have four doors, a fixed roof, and are known for their comfortable seating and practicality."
+      },
+      {
+        "id": 3,
+        "name": "SUV",
+        "description": "SUV stands for Sports Utility Vehicle. These vehicles are designed with a higher ground clearance, spacious interior, and often offer off-road capabilities. SUVs are popular for their versatility, accommodating larger groups and providing ample cargo space."
+      },
+      {
+        "id": 4,
+        "name": "Hatchback",
+        "description": "Hatchbacks are compact cars that feature a rear door, typically hinged at the roof, providing access to the cargo area. They are known for their practicality, fuel efficiency, and versatile interior space."
+      }
+    ]
+  }
+  
